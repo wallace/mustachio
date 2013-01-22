@@ -1,7 +1,7 @@
 !!!
 %html
   %head
-    %title mustachify.me
+    %title trollify-me.herokuapp.com
     = haml :ga
     :css
       img {
@@ -16,16 +16,19 @@
         color: grey;
       }
   %body
-    %a{:href => "http://github.com/afeld/mustachio"}
+    %a{:href => "http://github.com/wallace/mustachio"}
       %img{:style => "position: absolute; top: 0; right: 0; border: 0;", :src => "https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png", :alt => "Fork me on GitHub"}
     %img{:src => "/#{@stache_num}?src=#{DEMO_IMAGE}"}
     %h1 #{@site}/#{@stache_num}?src=<em>YOUR_IMAGE_URL</em>
     
     #footer
       Created by 
+      %a{:href => "http://blog.jonathanrwallace.com/about"}<
+        Jonathan Wallace
+      \- thanks to
       %a{:href => "http://afeld.me"}<
         Aidan Feldman
-      \- thanks to
+      and
       %a{:href => "https://github.com/benburkert"}<
         Ben Burkert
       and

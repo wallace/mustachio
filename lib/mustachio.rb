@@ -69,10 +69,11 @@ module Mustachio
 
       # TODO: make more robust by filtering out faces without all data
       new_faces = faces.map do |face|
+        bounding_box = face.delete('bounding_box')
         face_arr = face.map do |k, v|
           [k, { 'x' => (v['x'] * (width / 100.0)), 'y' => (v['y'] * (height / 100.0)) }]
         end
-        Hash[face_arr]
+        Hash[face_arr].merge('bounding_box' => bounding_box)
       end
       new_faces
     end

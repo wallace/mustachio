@@ -67,7 +67,7 @@ Magickly.add_convert_factory :mustachify do |c|
     # resize to smaller than 900px, because Face.com downsizes the image to this anyway
     # TODO move resize inside of Mustachio.face_data
     faces = convert.image.thumb('900x900>').face_data_as_px(width, height)
-    
+
     commands = ['-virtual-pixel transparent']
     faces.each do |face|
       stache_num = case stache_num_param
@@ -93,18 +93,22 @@ Magickly.add_convert_factory :mustachify do |c|
       # is mapped to the center of the mouth
 
       rotation = Math.atan(( face['mouth_right']['y'] - face['mouth_left']['y'] ).to_f / ( face['mouth_right']['x'] - face['mouth_left']['x'] ).to_f ) / Math::PI * 180.0
-      desired_height = Math.sqrt(
-                                 ( face['nose']['x'] - face['mouth_center']['x'] ).to_f**2 +
-                                 ( face['nose']['y'] - face['mouth_center']['y'] ).to_f**2
+
+      eye_distance = Math.sqrt(
+                                 ( face['eye_left']['x'] - face['eye_right']['x'] ).to_f**2 +
+                                 ( face['eye_left']['y'] - face['eye_right']['y'] ).to_f**2
                                  )
-      mouth_intersect = mustache['height'] - mustache['mouth_overlap']
-      scale = desired_height / mouth_intersect
-      
+
+      hair_x = face['bounding_box']['tl']['x'] + (face['bounding_box']['size']['width'] / 2.0)
+      hair_y = face['bounding_box']['tl']['y']
+
+      scale = (eye_distance * 2.2) / 130.to_f # magic 130 is the width of the base of the blue hair
+
       srt_params = [
-                    [ mustache['width'] / 2.0, mouth_intersect - mustache['vert_offset'] ].map{|e| e.to_i }.join(','), # bottom-center of stache
+                    [ mustache['width'] / 2, mustache['height'] - mustache['vert_offset'] ].map{|e| e.to_i }.join(','), # bottom-center of stache
                     scale, # scale
                     rotation, # rotate
-                    [ face['mouth_center']['x'], face['mouth_center']['y'] ].map{|e| e.to_i }.join(',') # middle of mouth
+                    [ hair_x, hair_y ].map{|e| e.to_i }.join(',') # middle of bounding box
                    ]
       srt_params_str = srt_params.join(' ')
       
